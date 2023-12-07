@@ -2,12 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-
 const folderPath = './data';
 const inputFilePath = 'input_1.txt';
 const fullPath = folderPath + "/" + inputFilePath;
 
 let numbers = [];
+
 const textNumbers = {
     "one" : 1,
     "two" : 2,
@@ -34,26 +34,50 @@ if (fs.statSync(fullPath).isFile()) {
     rl.on('line', (line) => {
         lineNumber++;
         let currentNumberStr = '';
+
         let firstNumber = '';
         let lastNumber = '';
+
+        let firstPosition, lastPosition;
+        let firstSymbolNumber, lastSymbolNumber, firstSymbolPosition, lastSymbolPosition;
         let foundFirstNumber = false;
+
+        let trueFirstNumber;
+        let trueLastNumber;
+
+        firstSymbolNumber = 9; lastSymbolNumber = 1;
+        firstSymbolPosition = 0; lastSymbolPosition = 40;
         
-        line.split('').forEach(char => { 
+        line.split('').forEach((char, index) => {
             if (/[a-zA-Z]/.test(char)) {
-                //placeholder
+                // [firstSymbolNumber, firstSymbolPosition] = findNumber(0);
+                // [lastSymbolNumber, lastSymbolPosition] = findNumber(1);
+
             } else if (/\d/.test(char)) {
-                foundFirstNumber ? lastNumber = char : firstNumber = char;
-                foundFirstNumber = true;
+                if (!foundFirstNumber) {
+                    firstNumber = char;
+                    firstPosition = index;
+                    foundFirstNumber = true;
+                } 
+                lastNumber = char;
+                lastPosition = index;  
             } else {
                 console.log(`${char} is neither a letter nor a number.`);
             }
-
-            if (!lastNumber || lastNumber === '') {
-                lastNumber = firstNumber;
-            }
-    
-            currentNumberStr = firstNumber + lastNumber;
         });
+
+        if (!lastNumber || lastNumber === '') {
+            lastNumber = firstNumber;
+        }
+
+        firstNumber = parseInt(firstNumber, 10);
+        lastNumber = parseInt(lastNumber, 10);
+
+        trueFirstNumber = (firstPosition <= firstSymbolPosition) ? firstNumber : firstSymbolNumber;
+        trueLastNumber = (lastPosition >= lastSymbolPosition) ? lastNumber : lastSymbolNumber;
+
+        console.log(trueFirstNumber, "aaaaaaaaaaaaaaaaa" , trueLastNumber);
+        currentNumberStr = trueFirstNumber + trueLastNumber;
 
         if (currentNumberStr) {
             numbers.push(parseInt(currentNumberStr, 10));
@@ -71,9 +95,16 @@ if (fs.statSync(fullPath).isFile()) {
 function calculateSum(numbers) {
     let sum = 0;
     for (let i = 0; i < numbers.length; i++) {
-        console.log(numbers[i]);
+        // console.log(numbers[i]);
         sum += numbers[i];
     }
     console.log('Total sum:', sum);
 }
 
+function findNumber(firstOrLast) {
+    if (firstOrLast === 0) {
+
+    } else if (firstOrLast === 1) {
+
+    }
+}
