@@ -48,10 +48,12 @@ if (fs.statSync(fullPath).isFile()) {
         firstSymbolNumber = 9; lastSymbolNumber = 1;
         firstSymbolPosition = 0; lastSymbolPosition = 40;
         
+        [firstSymbolNumber, firstSymbolPosition, lastSymbolNumber, lastSymbolPosition] = findNumber(line);
+
         line.split('').forEach((char, index) => {
             if (/[a-zA-Z]/.test(char)) {
-                // [firstSymbolNumber, firstSymbolPosition] = findNumber(0);
-                // [lastSymbolNumber, lastSymbolPosition] = findNumber(1);
+
+                //placeholder
 
             } else if (/\d/.test(char)) {
                 if (!foundFirstNumber) {
@@ -101,10 +103,18 @@ function calculateSum(numbers) {
     console.log('Total sum:', sum);
 }
 
-function findNumber(firstOrLast) {
-    if (firstOrLast === 0) {
 
-    } else if (firstOrLast === 1) {
+//Work in progress
+function findNumber(line) {
+    let firstSymbolNumber = null, firstSymbolPosition = -1;
+    let lastSymbolNumber = null, lastSymbolPosition = -1;
 
-    }
+    line.split(/(\d+)/).forEach((string, index) => { 
+        for (const [key, value] of Object.entries(textNumbers)) {
+            let dynamicRegex = new RegExp('.{' + key + '}.');
+            string.match(dynamicRegex);
+        }
+    });
+
+    return firstSymbolNumber, firstSymbolPosition, lastSymbolNumber, lastSymbolPosition;
 }
