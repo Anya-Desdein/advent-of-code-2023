@@ -44,17 +44,12 @@ if (fs.statSync(fullPath).isFile()) {
 
         let trueFirstNumber;
         let trueLastNumber;
-
-        firstSymbolNumber = 9; lastSymbolNumber = 1;
-        firstSymbolPosition = 0; lastSymbolPosition = 40;
         
         [firstSymbolNumber, firstSymbolPosition, lastSymbolNumber, lastSymbolPosition] = findNumber(line);
 
         line.split('').forEach((char, index) => {
             if (/[a-zA-Z]/.test(char)) {
-
                 //placeholder
-
             } else if (/\d/.test(char)) {
                 if (!foundFirstNumber) {
                     firstNumber = char;
@@ -74,12 +69,21 @@ if (fs.statSync(fullPath).isFile()) {
 
         firstNumber = parseInt(firstNumber, 10);
         lastNumber = parseInt(lastNumber, 10);
-
-        trueFirstNumber = (firstPosition <= firstSymbolPosition) ? firstNumber : firstSymbolNumber;
-        trueLastNumber = (lastPosition >= lastSymbolPosition) ? lastNumber : lastSymbolNumber;
-
-        console.log(trueFirstNumber, "aaaaaaaaaaaaaaaaa" , trueLastNumber);
-        currentNumberStr = trueFirstNumber + trueLastNumber;
+        // console.log("1st: ", firstNumber, " Last: ", lastNumber);
+        // console.log("1st txt: ", firstSymbolNumber, " Last txt: ", lastSymbolNumber);
+        
+        if (firstSymbolNumber === null || firstSymbolPosition === -1 || lastSymbolNumber === null || lastSymbolPosition === -1) {
+            trueFirstNumber = firstNumber;
+            trueLastNumber = trueLastNumber;
+            console.log(typeof trueFirstNumber, "aaa", typeof trueLastNumber);
+        } else {
+            trueFirstNumber = (firstPosition <= firstSymbolPosition) ? firstNumber : firstSymbolNumber;
+            trueLastNumber = (lastPosition >= lastSymbolPosition) ? lastNumber : lastSymbolNumber;
+            console.log(typeof trueFirstNumber, "bbb", typeof trueLastNumber);
+        }
+       
+        // console.log(trueFirstNumber, "aaaaaaaaaaaaaaaaa" , trueLastNumber);
+        currentNumberStr = concatenateNumbers(trueFirstNumber, trueLastNumber);
 
         if (currentNumberStr) {
             numbers.push(parseInt(currentNumberStr, 10));
@@ -103,18 +107,35 @@ function calculateSum(numbers) {
     console.log('Total sum:', sum);
 }
 
-
-//Work in progress
 function findNumber(line) {
     let firstSymbolNumber = null, firstSymbolPosition = -1;
     let lastSymbolNumber = null, lastSymbolPosition = -1;
 
-    line.split(/(\d+)/).forEach((string, index) => { 
-        for (const [key, value] of Object.entries(textNumbers)) {
-            let dynamicRegex = new RegExp('.{' + key + '}.');
-            string.match(dynamicRegex);
-        }
-    });
+    for (const [key, value] of Object.entries(textNumbers)) {
+        let dynamicRegex = new RegExp(key, 'g');
+        
+        let match;
+        while ((match = dynamicRegex.exec(line)) !== null) {
+            let startPosition = match.index;
+            let endPosition = startPosition + key.length - 1;
 
-    return firstSymbolNumber, firstSymbolPosition, lastSymbolNumber, lastSymbolPosition;
+            if (firstSymbolNumber === null) {
+                firstSymbolNumber = value; 
+                firstSymbolPosition = startPosition;
+                // console.log(value, "   index of:", firstSymbolPosition);
+            }
+
+            if (endPosition > lastSymbolPosition) {
+                lastSymbolNumber = value;
+                lastSymbolPosition = endPosition;
+                // console.log(value, "   index of:", lastSymbolPosition);
+            }
+        }
+    }
+
+    return [firstSymbolNumber, firstSymbolPosition, lastSymbolNumber, lastSymbolPosition];
+}
+
+function concatenateNumbers(num1, num2) {
+    return num1 * 10 + num2;
 }
