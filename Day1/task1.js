@@ -8,7 +8,6 @@ const inputFilePath = 'input_1.txt';
 const fullPath = folderPath + "/" + inputFilePath;
 
 let numbers = [];
-let sum = 0;
 
 if (fs.statSync(fullPath).isFile()) {
     const fileStream = fs.createReadStream(fullPath);
